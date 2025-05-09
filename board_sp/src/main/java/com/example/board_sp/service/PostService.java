@@ -46,6 +46,17 @@ public class PostService {
 
     @Transactional
     public Board createPostFromDto(PostCreateRequest request) {
+        // 중복 체크: 같은 제목, 작성자, 내용, 오늘 날짜로 이미 등록된 글이 있는지 확인
+        boolean exists = postRepository.existsByTitleAndWriterAndContentAndCreatedDate(
+                request.getTitle(),
+                request.getWriter(),
+                request.getContent(),
+                LocalDate.now()
+        );
+        if (exists) {
+            throw new IllegalStateException("동일한 내용의 글이 이미 등록되어 있습니다.");
+        }
+
         Board board = new Board();
         board.setTitle(request.getTitle());
         board.setContent(request.getContent());
