@@ -1,0 +1,71 @@
+.modal-backdrop {
+    position: fixed;
+    left: 0; top: 0;
+    width: 100vw; height: 100vh;
+    background: rgba(0,0,0,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+.modal {
+    background: #fff;
+    padding: 24px 32px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    min-width: 240px;
+    text-align: center;
+}
+.modal-message {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #222;
+}
+.modal-btn-group {
+    margin-top: 18px;
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+}
+
+/* 마우스 위치에 따라 뜨는 모달 */
+.modal-follow {
+    background: #fff;
+    border: 1.5px solid #bfc8e2;
+    border-radius: 12px;
+    box-shadow: 0 6px 24px rgba(44, 53, 80, 0.18), 0 1.5px 6px rgba(44, 53, 80, 0.10);
+    padding: 28px 36px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    min-width: 220px;
+    min-height: 70px;
+    transition: box-shadow 0.2s;
+    font-size: 1.18rem;
+}
+
+.modal-follow .board-btn {
+    font-size: 1.08rem;
+    padding: 12px 28px;
+    border-radius: 8px;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(44, 53, 80, 0.08);
+    transition: background 0.15s, color 0.15s;
+}
+
+.modal-follow .board-btn.cancel {
+    background: #f3f6fa;
+    color: #2c3550;
+    border: 1.5px solid #bfc8e2;
+}
+
+.modal-follow .board-btn:not(.cancel) {
+    background: #3a5afe;
+    color: #fff;
+    border: none;
+}
+
+.modal-follow .board-btn:hover {
+    filter: brightness(0.97);
+    box-shadow: 0 4px 16px rgba(44, 53, 80, 0.13);
+}
