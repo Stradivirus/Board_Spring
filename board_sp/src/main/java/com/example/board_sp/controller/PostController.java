@@ -68,4 +68,9 @@ public class PostController {
         return ResponseEntity.noContent().build();
     }
 
+    // 중복 등록 등 예외 발생 시 400 에러와 메시지 반환
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<?> handleIllegalState(IllegalStateException ex) {
+        return ResponseEntity.badRequest().body(java.util.Map.of("message", ex.getMessage()));
+    }
 }

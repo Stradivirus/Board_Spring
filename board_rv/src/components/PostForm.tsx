@@ -45,6 +45,14 @@ const PostForm: React.FC<Props> = ({ isEdit }) => {
         }
     }, [isEdit, id]);
 
+    // 에러 메시지 2초 후 자동 제거
+    useEffect(() => {
+        if (error) {
+            const timer = setTimeout(() => setError(null), 2000);
+            return () => clearTimeout(timer);
+        }
+    }, [error]);
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setForm({ ...form, [e.target.name]: e.target.value });
     };
@@ -69,7 +77,11 @@ const PostForm: React.FC<Props> = ({ isEdit }) => {
                     body: JSON.stringify(form),
                 });
             }
-            if (!res.ok) throw new Error("저장에 실패했습니다.");
+            if (!res.ok) {
+                // 서버에서 반환한 에러 메시지 추출
+                const data = await res.json().catch(() => ({}));
+                throw new Error(data.message || "저장에 실패했습니다.");
+            }
             navigate("/");
         } catch (err: any) {
             setError(err?.message || "저장 중 오류가 발생했습니다.");

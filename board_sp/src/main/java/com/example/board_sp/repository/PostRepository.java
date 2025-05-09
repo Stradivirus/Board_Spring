@@ -6,6 +6,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.time.LocalDate;
+
 public interface PostRepository extends JpaRepository<Board, Long> {
 
     // 삭제되지 않은 최신 revision 게시글 조회 (board + board_status 조인)
@@ -33,4 +35,7 @@ public interface PostRepository extends JpaRepository<Board, Long> {
         ORDER BY b.createdDate DESC, b.createdTime DESC
     """)
     Page<Board> findSoftDeleted(Pageable pageable);
+
+    // 중복 게시글 존재 여부 확인
+    boolean existsByTitleAndWriterAndContentAndCreatedDate(String title, String writer, String content, LocalDate createdDate);
 }
