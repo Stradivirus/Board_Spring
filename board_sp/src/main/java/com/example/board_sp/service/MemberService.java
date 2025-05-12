@@ -58,4 +58,13 @@ public class MemberService {
         response.setJoinedAt(member.getJoinedAt());
         return response;
     }
+
+    public boolean checkDuplicate(String field, String value) {
+        return switch (field) {
+            case "userId" -> memberRepository.existsByUserId(value);
+            case "nickname" -> memberRepository.existsByNickname(value);
+            case "email" -> memberRepository.existsByEmail(value);
+            default -> throw new IllegalArgumentException("잘못된 필드입니다.");
+        };
+    }
 }

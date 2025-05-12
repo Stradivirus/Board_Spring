@@ -20,4 +20,9 @@ public class MemberController {
     public MemberResponse login(@RequestBody MemberLoginRequest request) {
         return memberService.login(request);
     }
+
+    @GetMapping("/check/{field}")
+    public boolean checkDuplicate(@PathVariable String field, @RequestParam String value) {
+        return memberService.checkDuplicate(field, value);
+    }
 }
