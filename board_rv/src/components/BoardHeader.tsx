@@ -1,4 +1,3 @@
-// src/components/BoardHeader.tsx
 import React, { useState } from "react";
 import "../styles/Board.css";
 import Modal from "./Modal";

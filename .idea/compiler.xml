@@ -7,7 +7,7 @@
         <processorPath useClasspath="false">
           <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.38/57f8f5e02e92a30fd21b80cbd426a4172b5f8e29/lombok-1.18.38.jar" />
         </processorPath>
-        <module name="board_sp.main" />
+        <module name="com.example.board_sp.main" />
       </profile>
     </annotationProcessing>
   </component>
@@ -16,6 +16,7 @@
       <module name="board_sp" options="-parameters" />
       <module name="board_sp.main" options="-parameters" />
       <module name="board_sp.test" options="-parameters" />
+      <module name="com.example.board_sp.main" options="-parameters" />
     </option>
   </component>
 </project>
