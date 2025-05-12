@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import { API_URLS } from "../api/urls";
-import BoardHeader from "./BoardHeader";
 import "../styles/Board.css";
 
 interface PostFormState {
@@ -83,7 +82,7 @@ const PostForm: React.FC<Props> = ({ isEdit }) => {
                 throw new Error(data.message || "저장에 실패했습니다.");
             }
             navigate("/");
-        } catch (err: any) {
+        } catch (err : unknown) {
             setError(err?.message || "저장 중 오류가 발생했습니다.");
         } finally {
             setIsSubmitting(false);
@@ -92,7 +91,6 @@ const PostForm: React.FC<Props> = ({ isEdit }) => {
 
     return (
         <>
-            <BoardHeader />
             <main className="board-form-container board-form-container--detail">
                 <h2 className="board-form-title board-form-title--mb">
                     {isEdit ? "글 수정" : "글 작성"}

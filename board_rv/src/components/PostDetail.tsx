@@ -3,7 +3,7 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import type { Post } from "../types/Post";
 import { API_URLS } from "../api/urls";
 import { formatDate } from "../utils/formatDate";
-import BoardHeader from "./BoardHeader";
+// import BoardHeader from "./BoardHeader";
 import "../styles/Board.css";
 import "../styles/modal.css";
 
@@ -141,7 +141,6 @@ const PostDetail: React.FC = () => {
     if (error) {
         return (
             <>
-                <BoardHeader />
                 <div className="board-detail-container">
                     <div className="error-message">{error}</div>
                     <Link to="/" className="board-btn" style={{ marginTop: 24 }}>목록으로</Link>
@@ -152,7 +151,6 @@ const PostDetail: React.FC = () => {
 
     if (!post) return (
         <>
-            <BoardHeader />
             <div className="board-detail-container">로딩 중...</div>
         </>
     );
@@ -161,7 +159,6 @@ const PostDetail: React.FC = () => {
 
     return (
         <>
-            <BoardHeader />
             <main className="board-detail-container board-detail-outer">
                 <div className="board-detail-title board-detail-title-strong">
                     {post.title}

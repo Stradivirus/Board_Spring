@@ -1,6 +1,5 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import BoardHeader from "../components/BoardHeader";
 import "../styles/admin.css";
 
 const AdminDashboard: React.FC = () => {
@@ -8,7 +7,6 @@ const AdminDashboard: React.FC = () => {
 
     return (
         <>
-            <BoardHeader />
             <div className="admin-container">
                 <div className="admin-title-bar">
                     <h2>관리자 대시보드</h2>
