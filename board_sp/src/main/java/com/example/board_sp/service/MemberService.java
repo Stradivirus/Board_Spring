@@ -1,6 +1,8 @@
 package com.example.board_sp.service;
 
-import com.example.board_sp.dto.*;
+import com.example.board_sp.dto.MemberJoinRequest;
+import com.example.board_sp.dto.MemberLoginRequest;
+import com.example.board_sp.dto.MemberResponse;
 import com.example.board_sp.entity.Member;
 import com.example.board_sp.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -8,6 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -66,5 +69,10 @@ public class MemberService {
             case "email" -> memberRepository.existsByEmail(value);
             default -> throw new IllegalArgumentException("잘못된 필드입니다.");
         };
+    }
+
+    // 회원 전체 목록 조회
+    public List<Member> getAllMembers() {
+        return memberRepository.findAll();
     }
 }
