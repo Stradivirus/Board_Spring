@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import type { Post } from "../types/Post";
 import { API_URLS } from "../api/urls";
 import { formatDate } from "../utils/formatDate";
-import BoardHeader from "./BoardHeader";
 import "../styles/Board.css";
 
 const PAGE_SIZE = 30;
@@ -40,7 +39,6 @@ const PostList: React.FC = () => {
 
     return (
         <>
-            <BoardHeader />
             <main className="board-main">
                 <div className="board-title-bar">
                     <h2>게시글 목록</h2>
