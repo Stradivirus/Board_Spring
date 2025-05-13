@@ -9,6 +9,8 @@ import PostForm from "./components/PostForm";
 import AdminDashboard from "./pages/AdminDashboard";
 import DeletedPostList from "./pages/DeletedPostList";
 import DeletedSoftPostList from "./pages/DeletedSoftPostList";
+import AdminMembers from "./pages/AdminMembers";
+
 // 필요하다면 테스트 페이지 등도 import
 // import TestPage from "./pages/TestPage";
 
@@ -25,6 +27,7 @@ const App: React.FC = () => (
                     <Route path="/admin" element={<AdminDashboard />} />
                     <Route path="/admin/archive" element={<DeletedPostList />} />
                     <Route path="/admin/deleted" element={<DeletedSoftPostList />} />
+                    <Route path="/admin/members" element={<AdminMembers />} />
                     {/* <Route path="/test" element={<TestPage />} /> */}
                 </Routes>
             </main>

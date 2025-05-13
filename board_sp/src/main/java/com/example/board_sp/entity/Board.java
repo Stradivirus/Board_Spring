@@ -27,8 +27,13 @@ public class Board {
     @Column(name = "content", nullable = false, columnDefinition = "TEXT")
     private String content;
 
-    @Column(name = "writer", nullable = false, length = 50)
-    private String writer;
+    // writerId 컬럼(Long)으로 변경
+    @Column(name = "writer_id", nullable = false)
+    private Long writerId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "writer_id", referencedColumnName = "id", insertable = false, updatable = false)
+    private Member writer;
 
     @Column(name = "view_count", nullable = false)
     private Integer viewCount = 0;

@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import { API_URLS } from "../api/urls";
+import { useAuth } from "../context/AuthContext";
 import "../styles/Board.css";
 
 interface PostFormState {
     title: string;
-    writer: string;
     content: string;
+    userId: string;
 }
 
 interface Props {
@@ -16,17 +17,24 @@ interface Props {
 const PostForm: React.FC<Props> = ({ isEdit }) => {
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
+    const { user } = useAuth();
 
     const [form, setForm] = useState<PostFormState>({
         title: "",
-        writer: "",
         content: "",
+        userId: user?.userId ?? "",
     });
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        if (isEdit && id) {
+        if (user) {
+            setForm(f => ({ ...f, userId: user.userId }));
+        }
+    }, [user]);
+
+    useEffect(() => {
+        if (isEdit && id && user) {
             setError(null);
             fetch(`${API_URLS.POST(Number(id))}/edit`)
                 .then(res => {
@@ -35,16 +43,15 @@ const PostForm: React.FC<Props> = ({ isEdit }) => {
                 })
                 .then(data => setForm({
                     title: data.title,
-                    writer: data.writer,
                     content: data.content,
+                    userId: user.userId,
                 }))
                 .catch(err => {
                     setError(err.message || "글 정보를 불러오지 못했습니다.");
                 });
         }
-    }, [isEdit, id]);
+    }, [isEdit, id, user]);
 
-    // 에러 메시지 2초 후 자동 제거
     useEffect(() => {
         if (error) {
             const timer = setTimeout(() => setError(null), 2000);
@@ -77,17 +84,25 @@ const PostForm: React.FC<Props> = ({ isEdit }) => {
                 });
             }
             if (!res.ok) {
-                // 서버에서 반환한 에러 메시지 추출
                 const data = await res.json().catch(() => ({}));
                 throw new Error(data.message || "저장에 실패했습니다.");
             }
             navigate("/");
-        } catch (err : unknown) {
-            setError(err?.message || "저장 중 오류가 발생했습니다.");
+        } catch (err) {
+            setError((err as Error).message || "저장 중 오류가 발생했습니다.");
         } finally {
             setIsSubmitting(false);
         }
     };
+
+    if (!user) {
+        return (
+            <main className="board-form-container board-form-container--detail">
+                <div className="error-message">로그인 후 글쓰기가 가능합니다.</div>
+                <Link to="/" className="board-btn" style={{ marginTop: 24 }}>목록으로</Link>
+            </main>
+        );
+    }
 
     return (
         <>
@@ -107,18 +122,6 @@ const PostForm: React.FC<Props> = ({ isEdit }) => {
                             onChange={handleChange}
                             required
                             placeholder="제목을 입력하세요"
-                        />
-                    </label>
-                    <label className="board-form-label" htmlFor="writer">
-                        작성자
-                        <input
-                            className="board-form-input"
-                            id="writer"
-                            name="writer"
-                            value={form.writer}
-                            onChange={handleChange}
-                            required
-                            placeholder="이름 또는 닉네임"
                         />
                     </label>
                     <label className="board-form-label board-content-label" htmlFor="content">

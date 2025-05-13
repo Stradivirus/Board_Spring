@@ -1,9 +1,15 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
+interface AuthUser {
+    id: number;
+    userId: string;
+    nickname: string;
+}
+
 interface AuthContextType {
     isLoggedIn: boolean;
-    user: { userId: string; nickname: string } | null;
-    login: (token: string, userData: { userId: string; nickname: string }) => void;
+    user: AuthUser | null;
+    login: (token: string, userData: AuthUser) => void;
     logout: () => void;
 }
 
@@ -15,7 +21,7 @@ const AuthContext = createContext<AuthContextType>({
 });
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const [user, setUser] = useState<{ userId: string; nickname: string } | null>(null);
+    const [user, setUser] = useState<AuthUser | null>(null);
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -25,7 +31,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }
     }, []);
 
-    const login = (token: string, userData: { userId: string; nickname: string }) => {
+    const login = (token: string, userData: AuthUser) => {
         localStorage.setItem('token', token);
         localStorage.setItem('user', JSON.stringify(userData));
         setUser(userData);

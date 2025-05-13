@@ -1,4 +1,3 @@
-// AdminDeletedList.tsx
 import React, { useEffect, useState } from "react";
 import { formatDate } from "../utils/formatDate";
 import { Link } from "react-router-dom";
@@ -30,12 +29,12 @@ const AdminDeletedList: React.FC<Props> = ({ apiUrl, title }) => {
                 return res.json();
             })
             .then(data => {
-                const converted = (data.content || []).map((post: any) => ({
+                const converted = (data.content || []).map((post: Post) => ({
                     ...post,
-                    createdDate: post.createdDate || post.created_date,
-                    createdTime: post.createdTime || post.created_time,
-                    deletedDate: post.deletedDate || post.deleted_date,
-                    deletedTime: post.deletedTime || post.deleted_time,
+                    createdDate: post.createdDate || (post as any).created_date,
+                    createdTime: post.createdTime || (post as any).created_time,
+                    deletedDate: post.deletedDate || (post as any).deleted_date,
+                    deletedTime: post.deletedTime || (post as any).deleted_time,
                 }));
                 setPosts(converted);
                 setTotalPages(data.totalPages ?? 1);
@@ -88,7 +87,7 @@ const AdminDeletedList: React.FC<Props> = ({ apiUrl, title }) => {
                             const { date: deletedDate, time: deletedTime } = formatDate(post.deletedDate, post.deletedTime);
                             return (
                                 <tr key={`${post.id}-${idx}`}>
-                                    <td>{post.writer}</td>
+                                    <td>{post.writerNickname || "-"}</td>
                                     <td>{deletedDate}</td>
                                     <td>{deletedTime}</td>
                                     <td>{createdDate}</td>
