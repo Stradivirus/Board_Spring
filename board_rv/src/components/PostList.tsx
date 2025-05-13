@@ -11,6 +11,7 @@ const PAGE_SIZE = 30;
 const PostList: React.FC = () => {
     const [posts, setPosts] = useState<Post[]>([]);
     const [totalPages, setTotalPages] = useState(1);
+    const [totalElements, setTotalElements] = useState(0);
     const [page, setPage] = useState(0);
     const [error, setError] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
@@ -27,10 +28,12 @@ const PostList: React.FC = () => {
             .then(data => {
                 setPosts(data.content || []);
                 setTotalPages(data.totalPages || 1);
+                setTotalElements(data.totalElements || 0);
             })
             .catch(err => {
                 setPosts([]);
                 setTotalPages(1);
+                setTotalElements(0);
                 setError(err.message || "게시글을 불러오는 중 오류가 발생했습니다.");
             })
             .finally(() => setIsLoading(false));
@@ -79,11 +82,13 @@ const PostList: React.FC = () => {
                                 게시글이 없습니다.
                             </td>
                         </tr>
-                    ) : (posts || []).map(post => {
+                    ) : (posts || []).map((post, idx) => {
+                        // 글번호: 전체 글 개수에서 현재 페이지, 인덱스만큼 빼서 역순으로 표시
+                        const displayNumber = totalElements - (page * PAGE_SIZE) - idx;
                         const { date, time } = formatDate(post.createdDate, post.createdTime);
                         return (
                             <tr key={post.id}>
-                                <td className="board-post-id">{post.id}</td>
+                                <td className="board-post-id">{displayNumber}</td>
                                 <td>
                                     <Link
                                         to={`/posts/${post.id}`}

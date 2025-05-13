@@ -9,6 +9,7 @@ import "../styles/modal.css";
 
 const RecentPostList: React.FC<{ excludeId?: string }> = ({ excludeId }) => {
     const [posts, setPosts] = useState<Post[]>([]);
+    const [totalElements, setTotalElements] = useState(0);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
@@ -19,6 +20,7 @@ const RecentPostList: React.FC<{ excludeId?: string }> = ({ excludeId }) => {
                 return res.json();
             })
             .then(data => {
+                setTotalElements(data.totalElements || 0);
                 const filtered = (data.content || []).filter((post: Post) => String(post.id) !== excludeId).slice(0, 5);
                 setPosts(filtered);
             })
@@ -45,11 +47,13 @@ const RecentPostList: React.FC<{ excludeId?: string }> = ({ excludeId }) => {
                 </tr>
                 </thead>
                 <tbody>
-                {posts.map(post => {
+                {posts.map((post, idx) => {
+                    // 전체 글 개수에서 idx만큼 빼서 역순 번호
+                    const displayNumber = totalElements - idx;
                     const { date, time } = formatDate(post.createdDate, post.createdTime);
                     return (
                         <tr key={post.id}>
-                            <td>{post.id}</td>
+                            <td>{displayNumber}</td>
                             <td>
                                 <Link to={`/posts/${post.id}`} className="board-post-title-link">
                                     {post.title}
