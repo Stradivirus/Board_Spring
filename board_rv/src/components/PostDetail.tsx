@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from "react";
-import { useParams, Link, useNavigate } from "react-router-dom";
-import type { Post } from "../types/Post";
-import { API_URLS } from "../api/urls";
-import { formatDate } from "../utils/formatDate";
-import { useAuth } from "../context/AuthContext";
+import React, {useEffect, useState} from "react";
+import {useParams, Link, useNavigate} from "react-router-dom";
+import type {Post} from "../types/Post";
+import {API_URLS} from "../api/urls";
+import {formatDate} from "../utils/formatDate";
+import {useAuth} from "../context/AuthContext";
 import "../styles/Board.css";
 import "../styles/modal.css";
 
-const RecentPostList: React.FC<{ excludeId?: string }> = ({ excludeId }) => {
+const RecentPostList: React.FC<{ excludeId?: string }> = ({excludeId}) => {
     const [posts, setPosts] = useState<Post[]>([]);
     const [totalElements, setTotalElements] = useState(0);
     const [error, setError] = useState<string | null>(null);
@@ -31,15 +31,15 @@ const RecentPostList: React.FC<{ excludeId?: string }> = ({ excludeId }) => {
     if (!posts.length) return null;
 
     return (
-        <section className="board-container" style={{ marginTop: 48 }}>
-            <h3 style={{ fontSize: "1.3rem", fontWeight: 700, marginBottom: 18, color: "#2c3550" }}>
+        <section className="board-container" style={{marginTop: 48}}>
+            <h3 style={{fontSize: "1.3rem", fontWeight: 700, marginBottom: 18, color: "#2c3550"}}>
                 최신 글 5개
             </h3>
             <table className="board-table">
                 <thead>
                 <tr>
-                    <th style={{ width: "7%" }}>번호</th>
-                    <th style={{ width: "45%" }}>제목</th>
+                    <th style={{width: "7%"}}>번호</th>
+                    <th style={{width: "45%"}}>제목</th>
                     <th>작성자</th>
                     <th>작성일</th>
                     <th>작성시간</th>
@@ -50,7 +50,7 @@ const RecentPostList: React.FC<{ excludeId?: string }> = ({ excludeId }) => {
                 {posts.map((post, idx) => {
                     // 전체 글 개수에서 idx만큼 빼서 역순 번호
                     const displayNumber = totalElements - idx;
-                    const { date, time } = formatDate(post.createdDate, post.createdTime);
+                    const {date, time} = formatDate(post.createdDate, post.createdTime);
                     return (
                         <tr key={post.id}>
                             <td>{displayNumber}</td>
@@ -78,7 +78,7 @@ const ConfirmModal: React.FC<{
     y: number;
     onConfirm: () => void;
     onCancel: () => void;
-}> = ({ open, x, y, onConfirm, onCancel }) => {
+}> = ({open, x, y, onConfirm, onCancel}) => {
     if (!open) return null;
     return (
         <div
@@ -91,20 +91,20 @@ const ConfirmModal: React.FC<{
             }}
         >
             <button className="board-btn" onClick={onConfirm}>예</button>
-            <button className="board-btn cancel" onClick={onCancel} style={{ marginLeft: 8 }}>아니오</button>
+            <button className="board-btn cancel" onClick={onCancel} style={{marginLeft: 8}}>아니오</button>
         </div>
     );
 };
 
 const PostDetail: React.FC = () => {
-    const { id } = useParams<{ id: string }>();
+    const {id} = useParams<{ id: string }>();
     const [post, setPost] = useState<Post | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [isDeleting, setIsDeleting] = useState(false);
     const [showConfirm, setShowConfirm] = useState(false);
-    const [modalPos, setModalPos] = useState({ x: 0, y: 0 });
+    const [modalPos, setModalPos] = useState({x: 0, y: 0});
     const navigate = useNavigate();
-    const { user } = useAuth();
+    const {user} = useAuth();
 
     useEffect(() => {
         if (id) {
@@ -124,7 +124,7 @@ const PostDetail: React.FC = () => {
         setIsDeleting(true);
         setError(null);
         try {
-            const res = await fetch(API_URLS.POST(Number(id)), { method: "DELETE" });
+            const res = await fetch(API_URLS.POST(Number(id)), {method: "DELETE"});
             if (!res.ok) throw new Error("삭제에 실패했습니다.");
             navigate("/");
         } catch (err: any) {
@@ -161,7 +161,7 @@ const PostDetail: React.FC = () => {
         </>
     );
 
-    const { date, time } = formatDate(post.createdDate, post.createdTime);
+    const {date, time} = formatDate(post.createdDate, post.createdTime);
 
     return (
         <>
@@ -208,7 +208,7 @@ const PostDetail: React.FC = () => {
                 }}
                 onCancel={() => setShowConfirm(false)}
             />
-            <RecentPostList excludeId={String(post.id)} />
+            <RecentPostList excludeId={String(post.id)}/>
         </>
     );
 };

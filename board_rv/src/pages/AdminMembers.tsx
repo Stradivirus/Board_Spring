@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
-import type { Member } from "../types/Member";
-import { API_URLS } from "../api/urls";
+import React, {useEffect, useState} from "react";
+import type {Member} from "../types/Member";
+import {API_URLS} from "../api/urls";
 import "../styles/admin.css";
 
 const AdminMembers: React.FC = () => {

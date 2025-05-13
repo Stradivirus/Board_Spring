@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import type { Post } from "../types/Post";
-import { API_URLS } from "../api/urls";
-import { formatDate } from "../utils/formatDate";
-import { useAuth } from "../context/AuthContext";
+import React, {useEffect, useState} from "react";
+import {Link} from "react-router-dom";
+import type {Post} from "../types/Post";
+import {API_URLS} from "../api/urls";
+import {formatDate} from "../utils/formatDate";
+import {useAuth} from "../context/AuthContext";
 import "../styles/Board.css";
 
 const PAGE_SIZE = 30;
@@ -15,7 +15,7 @@ const PostList: React.FC = () => {
     const [page, setPage] = useState(0);
     const [error, setError] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
-    const { user } = useAuth();
+    const {user} = useAuth();
 
     useEffect(() => {
         setIsLoading(true);
@@ -52,17 +52,17 @@ const PostList: React.FC = () => {
                             <button className="board-write-btn">글쓰기</button>
                         </Link>
                     ) : (
-                        <button className="board-write-btn" disabled style={{ opacity: 0.5, cursor: "not-allowed" }}>
+                        <button className="board-write-btn" disabled style={{opacity: 0.5, cursor: "not-allowed"}}>
                             글쓰기 (로그인 필요)
                         </button>
                     )}
                 </div>
-                {error && <div className="error-message" style={{ marginBottom: 16 }}>{error}</div>}
+                {error && <div className="error-message" style={{marginBottom: 16}}>{error}</div>}
                 <table className="board-table">
                     <thead>
                     <tr>
-                        <th style={{ width: "7%" }}>번호</th>
-                        <th style={{ width: "45%" }}>제목</th>
+                        <th style={{width: "7%"}}>번호</th>
+                        <th style={{width: "45%"}}>제목</th>
                         <th>작성자</th>
                         <th>작성일</th>
                         <th>작성시간</th>
@@ -72,20 +72,20 @@ const PostList: React.FC = () => {
                     <tbody>
                     {isLoading ? (
                         <tr>
-                            <td colSpan={6} style={{ textAlign: 'center', color: '#aaa' }}>
+                            <td colSpan={6} style={{textAlign: 'center', color: '#aaa'}}>
                                 불러오는 중...
                             </td>
                         </tr>
                     ) : (posts || []).length === 0 ? (
                         <tr>
-                            <td colSpan={6} style={{ textAlign: 'center', color: '#aaa' }}>
+                            <td colSpan={6} style={{textAlign: 'center', color: '#aaa'}}>
                                 게시글이 없습니다.
                             </td>
                         </tr>
                     ) : (posts || []).map((post, idx) => {
                         // 글번호: 전체 글 개수에서 현재 페이지, 인덱스만큼 빼서 역순으로 표시
                         const displayNumber = totalElements - (page * PAGE_SIZE) - idx;
-                        const { date, time } = formatDate(post.createdDate, post.createdTime);
+                        const {date, time} = formatDate(post.createdDate, post.createdTime);
                         return (
                             <tr key={post.id}>
                                 <td className="board-post-id">{displayNumber}</td>
@@ -110,12 +110,14 @@ const PostList: React.FC = () => {
                     <button
                         onClick={handlePrev}
                         disabled={page === 0}
-                    >이전</button>
+                    >이전
+                    </button>
                     <span>페이지 {page + 1} / {totalPages}</span>
                     <button
                         onClick={handleNext}
                         disabled={page + 1 >= totalPages}
-                    >다음</button>
+                    >다음
+                    </button>
                 </div>
             </main>
         </>

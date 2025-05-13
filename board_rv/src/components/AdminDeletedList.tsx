@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
-import { formatDate } from "../utils/formatDate";
-import { Link } from "react-router-dom";
-import type { Post } from "../types/Post";
+import React, {useEffect, useState} from "react";
+import {formatDate} from "../utils/formatDate";
+import {Link} from "react-router-dom";
+import type {Post} from "../types/Post";
 import "../styles/admin.css";
 
 interface Props {
@@ -11,7 +11,7 @@ interface Props {
 
 const PAGE_SIZE = 20;
 
-const AdminDeletedList: React.FC<Props> = ({ apiUrl, title }) => {
+const AdminDeletedList: React.FC<Props> = ({apiUrl, title}) => {
     const [posts, setPosts] = useState<Post[]>([]);
     const [page, setPage] = useState(0);
     const [totalPages, setTotalPages] = useState(1);
@@ -58,33 +58,39 @@ const AdminDeletedList: React.FC<Props> = ({ apiUrl, title }) => {
                     type="date"
                     value={selectedDate}
                     onChange={e => setSelectedDate(e.target.value)}
-                    style={{ marginLeft: 16 }}
+                    style={{marginLeft: 16}}
                 />
             </div>
-            {isLoading && <div style={{ textAlign: "center", color: "#888", margin: "20px 0" }}>불러오는 중...</div>}
-            {error && <div style={{ textAlign: "center", color: "red", margin: "20px 0" }}>⚠️ {error}</div>}
+            {isLoading && <div style={{textAlign: "center", color: "#888", margin: "20px 0"}}>불러오는 중...</div>}
+            {error && <div style={{textAlign: "center", color: "red", margin: "20px 0"}}>⚠️ {error}</div>}
             {!isLoading && !error && (
                 <>
                     <table className="admin-table">
                         <thead>
                         <tr>
-                            <th style={{ width: "10%" }}>작성자</th>
-                            <th style={{ width: "13%" }}>삭제날짜</th>
-                            <th style={{ width: "13%" }}>삭제시간</th>
-                            <th style={{ width: "13%" }}>작성날짜</th>
-                            <th style={{ width: "13%" }}>작성시간</th>
-                            <th style={{ width: "18%" }}>제목</th>
-                            <th style={{ width: "20%" }}>내용</th>
+                            <th style={{width: "10%"}}>작성자</th>
+                            <th style={{width: "13%"}}>삭제날짜</th>
+                            <th style={{width: "13%"}}>삭제시간</th>
+                            <th style={{width: "13%"}}>작성날짜</th>
+                            <th style={{width: "13%"}}>작성시간</th>
+                            <th style={{width: "18%"}}>제목</th>
+                            <th style={{width: "20%"}}>내용</th>
                         </tr>
                         </thead>
                         <tbody>
                         {posts.length === 0 ? (
                             <tr>
-                                <td colSpan={7} style={{ textAlign: 'center', color: '#aaa' }}>삭제된 글이 없습니다.</td>
+                                <td colSpan={7} style={{textAlign: 'center', color: '#aaa'}}>삭제된 글이 없습니다.</td>
                             </tr>
                         ) : posts.map((post, idx) => {
-                            const { date: createdDate, time: createdTime } = formatDate(post.createdDate, post.createdTime);
-                            const { date: deletedDate, time: deletedTime } = formatDate(post.deletedDate, post.deletedTime);
+                            const {
+                                date: createdDate,
+                                time: createdTime
+                            } = formatDate(post.createdDate, post.createdTime);
+                            const {
+                                date: deletedDate,
+                                time: deletedTime
+                            } = formatDate(post.deletedDate, post.deletedTime);
                             return (
                                 <tr key={`${post.id}-${idx}`}>
                                     <td>{post.writerNickname || "-"}</td>
@@ -93,20 +99,22 @@ const AdminDeletedList: React.FC<Props> = ({ apiUrl, title }) => {
                                     <td>{createdDate}</td>
                                     <td>{createdTime}</td>
                                     <td>{post.title}</td>
-                                    <td style={{ whiteSpace: "pre-line", color: "#444" }}>{post.content}</td>
+                                    <td style={{whiteSpace: "pre-line", color: "#444"}}>{post.content}</td>
                                 </tr>
                             );
                         })}
                         </tbody>
                     </table>
-                    <div style={{ display: "flex", justifyContent: "center", gap: "16px", marginTop: "18px" }}>
+                    <div style={{display: "flex", justifyContent: "center", gap: "16px", marginTop: "18px"}}>
                         <button onClick={() => setPage(p => Math.max(0, p - 1))} disabled={page === 0}>이전</button>
                         <span>페이지 {page + 1} / {totalPages}</span>
-                        <button onClick={() => setPage(p => Math.min(totalPages - 1, p + 1))} disabled={page + 1 >= totalPages}>다음</button>
+                        <button onClick={() => setPage(p => Math.min(totalPages - 1, p + 1))}
+                                disabled={page + 1 >= totalPages}>다음
+                        </button>
                     </div>
                 </>
             )}
-            <div style={{ marginTop: "24px" }}>
+            <div style={{marginTop: "24px"}}>
                 <Link to="/admin" className="admin-btn">관리자 대시보드로</Link>
             </div>
         </div>

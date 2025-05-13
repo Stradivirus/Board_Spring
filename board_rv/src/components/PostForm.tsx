@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate, useParams, Link } from "react-router-dom";
-import { API_URLS } from "../api/urls";
-import { useAuth } from "../context/AuthContext";
+import React, {useState, useEffect} from "react";
+import {useNavigate, useParams, Link} from "react-router-dom";
+import {API_URLS} from "../api/urls";
+import {useAuth} from "../context/AuthContext";
 import "../styles/Board.css";
 
 interface PostFormState {
@@ -14,10 +14,10 @@ interface Props {
     isEdit?: boolean;
 }
 
-const PostForm: React.FC<Props> = ({ isEdit }) => {
-    const { id } = useParams<{ id: string }>();
+const PostForm: React.FC<Props> = ({isEdit}) => {
+    const {id} = useParams<{ id: string }>();
     const navigate = useNavigate();
-    const { user } = useAuth();
+    const {user} = useAuth();
 
     const [form, setForm] = useState<PostFormState>({
         title: "",
@@ -29,7 +29,7 @@ const PostForm: React.FC<Props> = ({ isEdit }) => {
 
     useEffect(() => {
         if (user) {
-            setForm(f => ({ ...f, userId: user.userId }));
+            setForm(f => ({...f, userId: user.userId}));
         }
     }, [user]);
 
@@ -60,7 +60,7 @@ const PostForm: React.FC<Props> = ({ isEdit }) => {
     }, [error]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        setForm({ ...form, [e.target.name]: e.target.value });
+        setForm({...form, [e.target.name]: e.target.value});
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -73,13 +73,13 @@ const PostForm: React.FC<Props> = ({ isEdit }) => {
             if (isEdit && id) {
                 res = await fetch(API_URLS.POST(Number(id)), {
                     method: "PUT",
-                    headers: { "Content-Type": "application/json" },
+                    headers: {"Content-Type": "application/json"},
                     body: JSON.stringify(form),
                 });
             } else {
                 res = await fetch(API_URLS.POSTS, {
                     method: "POST",
-                    headers: { "Content-Type": "application/json" },
+                    headers: {"Content-Type": "application/json"},
                     body: JSON.stringify(form),
                 });
             }
@@ -99,7 +99,7 @@ const PostForm: React.FC<Props> = ({ isEdit }) => {
         return (
             <main className="board-form-container board-form-container--detail">
                 <div className="error-message">로그인 후 글쓰기가 가능합니다.</div>
-                <Link to="/" className="board-btn" style={{ marginTop: 24 }}>목록으로</Link>
+                <Link to="/" className="board-btn" style={{marginTop: 24}}>목록으로</Link>
             </main>
         );
     }
@@ -110,7 +110,7 @@ const PostForm: React.FC<Props> = ({ isEdit }) => {
                 <h2 className="board-form-title board-form-title--mb">
                     {isEdit ? "글 수정" : "글 작성"}
                 </h2>
-                {error && <div className="error-message" style={{ marginBottom: 16 }}>{error}</div>}
+                {error && <div className="error-message" style={{marginBottom: 16}}>{error}</div>}
                 <form onSubmit={handleSubmit} className="board-form">
                     <label className="board-form-label" htmlFor="title">
                         제목

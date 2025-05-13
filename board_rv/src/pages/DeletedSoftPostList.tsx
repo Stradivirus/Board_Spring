@@ -1,5 +1,5 @@
 import React from "react";
-import { API_URLS } from "../api/urls";
+import {API_URLS} from "../api/urls";
 import AdminDeletedList from "../components/AdminDeletedList";
 
 const DeletedSoftPostList: React.FC = () => (

@@ -27,7 +27,6 @@ public class Board {
     @Column(name = "content", nullable = false, columnDefinition = "TEXT")
     private String content;
 
-    // writerId 컬럼(Long)으로 변경
     @Column(name = "writer_id", nullable = false)
     private Long writerId;
 

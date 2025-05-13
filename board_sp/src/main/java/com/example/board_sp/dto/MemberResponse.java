@@ -11,7 +11,6 @@ public class MemberResponse {
     private String userId;
     private String nickname;
     private String email;
-    private LocalDate joinedAt; // 필드 추가
+    private LocalDate joinedAt;
 
-    // 이미 @Setter가 있으므로 setJoinedAt(LocalDate joinedAt) 자동 생성됨
 }

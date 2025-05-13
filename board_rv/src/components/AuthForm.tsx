@@ -1,9 +1,9 @@
 // board_rv/src/components/AuthForm.tsx
 
-import React, { useState } from "react";
-import type { Member } from "../types/Member";
-import { useAuth } from "../context/AuthContext";
-import { API_URLS } from "../api/urls";
+import React, {useState} from "react";
+import type {Member} from "../types/Member";
+import {useAuth} from "../context/AuthContext";
+import {API_URLS} from "../api/urls";
 import "../styles/Modal.css";
 
 interface AuthFormProps {
@@ -11,8 +11,8 @@ interface AuthFormProps {
     onSuccess?: (member: Member) => void;
 }
 
-const AuthForm: React.FC<AuthFormProps> = ({ mode, onSuccess }) => {
-    const { login } = useAuth();
+const AuthForm: React.FC<AuthFormProps> = ({mode, onSuccess}) => {
+    const {login} = useAuth();
     const [form, setForm] = useState({
         userId: "",
         nickname: "",
@@ -29,8 +29,8 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode, onSuccess }) => {
     });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        setForm({ ...form, [name]: value });
+        const {name, value} = e.target;
+        setForm({...form, [name]: value});
 
         if (name === "passwordConfirm") {
             setValidation((prev) => ({
@@ -41,7 +41,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode, onSuccess }) => {
     };
 
     const handleBlur = async (e: React.FocusEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
+        const {name, value} = e.target;
 
         if (name === "passwordConfirm") {
             setValidation((prev) => ({
@@ -68,8 +68,8 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode, onSuccess }) => {
                     setValidation((prev) => ({
                         ...prev,
                         [name]: isDuplicate
-                            ? <span style={{ color: "red" }}>이미 사용 중입니다</span>
-                            : <span style={{ color: "green" }}>사용 가능합니다</span>,
+                            ? <span style={{color: "red"}}>이미 사용 중입니다</span>
+                            : <span style={{color: "green"}}>사용 가능합니다</span>,
                     }));
                 } else {
                     setValidation((prev) => ({
@@ -103,11 +103,11 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode, onSuccess }) => {
                     : API_URLS.MEMBER_JOIN;
             const payload =
                 mode === "login"
-                    ? { userId: form.userId, password: form.password }
+                    ? {userId: form.userId, password: form.password}
                     : form;
             const res = await fetch(url, {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: {"Content-Type": "application/json"},
                 body: JSON.stringify(payload),
             });
             if (res.ok) {
@@ -118,7 +118,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode, onSuccess }) => {
                 // 회원가입이든 로그인 성공이든 자동 로그인 처리
                 login(
                     data.token || "dummy-token",
-                    { id: data.id, userId: data.userId, nickname: data.nickname }
+                    {id: data.id, userId: data.userId, nickname: data.nickname}
                 );
 
                 if (onSuccess) onSuccess(data);
@@ -137,7 +137,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode, onSuccess }) => {
 
     return (
         <form className="modal-form" onSubmit={handleSubmit}>
-            <h3 className="modal-message" style={{ marginBottom: 12 }}>
+            <h3 className="modal-message" style={{marginBottom: 12}}>
                 {mode === "login" ? "로그인" : "회원가입"}
             </h3>
             <input
@@ -197,7 +197,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode, onSuccess }) => {
                         minLength={8}
                     />
                     {validation.passwordConfirm && (
-                        <div className="validation invalid" style={{ color: "red" }}>
+                        <div className="validation invalid" style={{color: "red"}}>
                             {validation.passwordConfirm}
                         </div>
                     )}
