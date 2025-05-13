@@ -42,12 +42,8 @@ public class ArchiveScheduler {
                     );
                     LocalDate deletedDate = ((Date) deletedInfo.get("deleted_date")).toLocalDate();
                     LocalTime deletedTime = ((Time) deletedInfo.get("deleted_time")).toLocalTime();
-                    String archiveTable = getArchivePartitionName(deletedDate);
-                    if (!isTableExists(archiveTable)) {
-                        log.warn("[ArchiveScheduler] 대상 아카이브 파티션 없음: {}", archiveTable);
-                        continue;
-                    }
-                    migrateDeletedData(id, date, deletedDate, deletedTime, archiveTable);
+
+                    migrateDeletedData(id, date, deletedDate, deletedTime);
                 }
             }
         } catch (Exception e) {
@@ -56,13 +52,13 @@ public class ArchiveScheduler {
         }
     }
 
-    private void migrateDeletedData(Long id, LocalDate createdDate, LocalDate deletedDate, LocalTime deletedTime, String archiveTable) {
-        String insertSql = String.format(
-                "INSERT INTO %s (id, title, content, writer, view_count, created_date, created_time, deleted_date, deleted_time) " +
-                        "SELECT id, title, content, writer, view_count, created_date, created_time, ?, ? " +
-                        "FROM board WHERE id = ? AND created_date = ?",
-                archiveTable
-        );
+    private void migrateDeletedData(Long id, LocalDate createdDate, LocalDate deletedDate, LocalTime deletedTime) {
+        String insertSql =
+                "INSERT INTO board_archive " +
+                        "(id, title, content, writer_id, view_count, created_date, created_time, deleted_date, deleted_time) " +
+                        "SELECT id, title, content, writer_id, view_count, created_date, created_time, ?, ? " +
+                        "FROM board WHERE id = ? AND created_date = ?";
+
         String deleteStatusSql = "DELETE FROM board_status WHERE board_id = ? AND created_date = ?";
         String deleteBoardSql = "DELETE FROM board WHERE id = ? AND created_date = ?";
 
@@ -70,21 +66,7 @@ public class ArchiveScheduler {
         jdbcTemplate.update(deleteStatusSql, id, createdDate);
         jdbcTemplate.update(deleteBoardSql, id, createdDate);
 
-        log.info("[ArchiveScheduler] board → {} 이관 및 삭제 완료 (id: {}, created_date: {}, deleted_date: {}, deleted_time: {})",
-                archiveTable, id, createdDate, deletedDate, deletedTime);
-    }
-
-    private boolean isTableExists(String tableName) {
-        return jdbcTemplate.queryForObject(
-                "SELECT EXISTS (SELECT 1 FROM pg_class c JOIN pg_namespace n ON n.oid = c.relnamespace WHERE c.relname = ? AND n.nspname = 'public')",
-                Boolean.class,
-                tableName
-        );
-    }
-
-    private String getArchivePartitionName(LocalDate deletedDate) {
-        int year = deletedDate.getYear();
-        int quarter = (deletedDate.getMonthValue() - 1) / 3 + 1;
-        return String.format("board_archive_%dq%d", year, quarter);
+        log.info("[ArchiveScheduler] board → board_archive 이관 및 삭제 완료 (id: {}, created_date: {}, deleted_date: {}, deleted_time: {})",
+                id, createdDate, deletedDate, deletedTime);
     }
 }
