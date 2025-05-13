@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, {createContext, useContext, useState, useEffect} from 'react';
 
 interface AuthUser {
     id: number;
@@ -16,11 +16,13 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType>({
     isLoggedIn: false,
     user: null,
-    login: () => {},
-    logout: () => {},
+    login: () => {
+    },
+    logout: () => {
+    },
 });
 
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({children}) => {
     const [user, setUser] = useState<AuthUser | null>(null);
 
     useEffect(() => {
@@ -44,7 +46,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
 
     return (
-        <AuthContext.Provider value={{ isLoggedIn: !!user, user, login, logout }}>
+        <AuthContext.Provider value={{isLoggedIn: !!user, user, login, logout}}>
             {children}
         </AuthContext.Provider>
     );

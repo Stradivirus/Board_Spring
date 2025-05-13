@@ -4,7 +4,7 @@ export interface Post {
     id: number;
     title: string;
     writerId: number;
-    writerNickname: string; // 추가
+    writerNickname: string;
     content: string;
     createdDate: string;
     createdTime: string;

@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
 import "../styles/Board.css";
 import Modal from "./Modal";
 import AuthForm from "./AuthForm";
-import { useAuth } from "../context/AuthContext";
+import {useAuth} from "../context/AuthContext";
 
 const BoardHeader: React.FC = () => {
-    const { isLoggedIn, user, logout } = useAuth();
+    const {isLoggedIn, user, logout} = useAuth();
     const [modalOpen, setModalOpen] = useState(false);
     const [authMode, setAuthMode] = useState<"login" | "register">("login");
 
@@ -39,7 +39,7 @@ const BoardHeader: React.FC = () => {
                     <>
                         <button
                             className="board-btn profile-btn"
-                            style={{ marginRight: 12 }}
+                            style={{marginRight: 12}}
                             onClick={handleProfileClick}
                         >
                             {user?.nickname}님
@@ -53,7 +53,7 @@ const BoardHeader: React.FC = () => {
                         <button
                             className="board-btn"
                             onClick={() => openModal("login")}
-                            style={{ marginRight: 10 }}
+                            style={{marginRight: 10}}
                         >
                             로그인
                         </button>
@@ -64,7 +64,7 @@ const BoardHeader: React.FC = () => {
                 )}
             </div>
             <Modal open={modalOpen} onClose={() => setModalOpen(false)}>
-                <AuthForm mode={authMode} onSuccess={() => setModalOpen(false)} />
+                <AuthForm mode={authMode} onSuccess={() => setModalOpen(false)}/>
             </Modal>
         </header>
     );

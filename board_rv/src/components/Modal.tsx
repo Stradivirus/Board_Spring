@@ -7,7 +7,7 @@ interface ModalProps {
     children: React.ReactNode;
 }
 
-const Modal: React.FC<ModalProps> = ({ open, onClose, children }) => {
+const Modal: React.FC<ModalProps> = ({open, onClose, children}) => {
     if (!open) return null;
     return (
         <div className="modal-backdrop" onClick={onClose}>

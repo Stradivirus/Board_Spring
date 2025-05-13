@@ -98,8 +98,6 @@ public class BoardService {
         board.setWriterId(member.getId());
         Board updatedBoard = boardRepository.save(board);
 
-        // revision 및 이력 저장 로직 제거
-
         return updatedBoard;
     }
 
@@ -107,9 +105,6 @@ public class BoardService {
     public void deletePost(Long id, LocalDate createdDate) {
         Board board = getPostById(id);
 
-        // revision 및 이력 저장 로직 제거
-        // 대신, 논리 삭제만 처리 (예: deleted 플래그만 true로 변경)
-        // 아래는 예시로, 실제 논리 삭제 방식에 맞게 구현 필요
         BoardStatus status = new BoardStatus();
         status.setBoardId(board.getId());
         status.setCreatedDate(board.getCreatedDate());
@@ -166,7 +161,6 @@ public class BoardService {
         dto.setCreatedDate(board.getCreatedDate());
         dto.setCreatedTime(board.getCreatedTime());
         dto.setDeleted(deleted);
-        // deletedDate, deletedTime 등은 필요시 BoardStatus에서 추가 조회
         return dto;
     }
 

@@ -1,7 +1,7 @@
 package com.example.board_sp.controller;
 
 import com.example.board_sp.dto.AdminBoardResponse;
-import com.example.board_sp.entity.Member; // 추가
+import com.example.board_sp.entity.Member;
 import com.example.board_sp.service.AdminService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -9,7 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List; // 추가
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/admin")
