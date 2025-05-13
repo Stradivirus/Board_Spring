@@ -115,13 +115,12 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode, onSuccess }) => {
                 setResult(`${mode === "login" ? "로그인" : "회원가입"} 성공!`);
                 await delay(1000); // 1초 대기
 
-                if (mode === "login") {
-                    // id, userId, nickname 모두 저장
-                    login(
-                        data.token || "dummy-token",
-                        { id: data.id, userId: data.userId, nickname: data.nickname }
-                    );
-                }
+                // 회원가입이든 로그인 성공이든 자동 로그인 처리
+                login(
+                    data.token || "dummy-token",
+                    { id: data.id, userId: data.userId, nickname: data.nickname }
+                );
+
                 if (onSuccess) onSuccess(data);
             } else {
                 const error = await res.text();

@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.time.LocalDate;
 
-public interface PostRepository extends JpaRepository<Board, Long> {
+public interface BoardRepository extends JpaRepository<Board, Long> {
 
     // 삭제되지 않은 최신 revision 게시글 조회 (board + board_status 조인)
     @Query("""

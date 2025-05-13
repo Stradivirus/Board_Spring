@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
 
-public interface PostArchiveRepository extends JpaRepository<BoardArchive, Long> {
+public interface BoardArchiveRepository extends JpaRepository<BoardArchive, Long> {
 
     // 삭제된 글 전체 조회 (최신순)
     @Query("""

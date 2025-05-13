@@ -46,4 +46,7 @@ public class BoardArchive implements Serializable {
 
     @Column(name = "created_time", nullable = false, updatable = false)
     private LocalTime createdTime;
+
+    @Column(name = "deleted_time")
+    private LocalTime deletedTime;
 }
