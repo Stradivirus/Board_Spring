@@ -36,6 +36,5 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     """)
     Page<Board> findSoftDeleted(Pageable pageable);
 
-    // 중복 게시글 존재 여부 확인 (writer → writerId로 변경)
     boolean existsByTitleAndWriterIdAndContentAndCreatedDate(String title, Long writerId, String content, LocalDate createdDate);
 }
