@@ -3,7 +3,7 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import type { Post } from "../types/Post";
 import { API_URLS } from "../api/urls";
 import { formatDate } from "../utils/formatDate";
-// import BoardHeader from "./BoardHeader";
+import { useAuth } from "../context/AuthContext";
 import "../styles/Board.css";
 import "../styles/modal.css";
 
@@ -55,7 +55,7 @@ const RecentPostList: React.FC<{ excludeId?: string }> = ({ excludeId }) => {
                                     {post.title}
                                 </Link>
                             </td>
-                            <td className="board-post-author">{post.writer}</td>
+                            <td className="board-post-author">{post.writerNickname || "-"}</td>
                             <td className="board-post-date">{date}</td>
                             <td className="board-post-date">{time}</td>
                             <td className="board-post-views">{post.viewCount}</td>
@@ -100,6 +100,7 @@ const PostDetail: React.FC = () => {
     const [showConfirm, setShowConfirm] = useState(false);
     const [modalPos, setModalPos] = useState({ x: 0, y: 0 });
     const navigate = useNavigate();
+    const { user } = useAuth();
 
     useEffect(() => {
         if (id) {
@@ -130,7 +131,6 @@ const PostDetail: React.FC = () => {
     };
 
     const handleDeleteClick = (e: React.MouseEvent) => {
-        // 스크롤 위치까지 고려해서 모달 위치 지정
         setModalPos({
             x: e.clientX + window.scrollX,
             y: e.clientY + window.scrollY,
@@ -143,7 +143,9 @@ const PostDetail: React.FC = () => {
             <>
                 <div className="board-detail-container">
                     <div className="error-message">{error}</div>
-                    <Link to="/" className="board-btn" style={{ marginTop: 24 }}>목록으로</Link>
+                    <div className="board-detail-btn-group board-detail-btn-group-right">
+                        <Link to="/" className="board-btn cancel">목록으로</Link>
+                    </div>
                 </div>
             </>
         );
@@ -164,7 +166,7 @@ const PostDetail: React.FC = () => {
                     {post.title}
                 </div>
                 <div className="board-detail-meta board-detail-meta-flex">
-                    <span><b>작성자</b> {post.writer}</span>
+                    <span><b>작성자</b> {post.writerNickname || "-"}</span>
                     <span><b>작성일</b> {date}</span>
                     <span><b>작성시간</b> {time}</span>
                     <span><b>조회수</b> {post.viewCount}</span>
@@ -172,19 +174,25 @@ const PostDetail: React.FC = () => {
                 <div className="board-detail-content board-detail-content-bg">
                     {post.content}
                 </div>
-                <div className="board-detail-btn-group board-detail-btn-group-right">
-                    <Link to={`/posts/${post.id}/edit`}>
-                        <button className="board-btn">수정</button>
-                    </Link>
-                    <button
-                        className="board-btn"
-                        onClick={handleDeleteClick}
-                        disabled={isDeleting}
-                    >
-                        {isDeleting ? "삭제 중..." : "삭제"}
-                    </button>
-                    <Link to="/" className="board-btn cancel">목록으로</Link>
-                </div>
+                {user && user.id === post.writerId ? (
+                    <div className="board-detail-btn-group board-detail-btn-group-right">
+                        <Link to={`/posts/${post.id}/edit`}>
+                            <button className="board-btn">수정</button>
+                        </Link>
+                        <button
+                            className="board-btn"
+                            onClick={handleDeleteClick}
+                            disabled={isDeleting}
+                        >
+                            {isDeleting ? "삭제 중..." : "삭제"}
+                        </button>
+                        <Link to="/" className="board-btn cancel">목록으로</Link>
+                    </div>
+                ) : (
+                    <div className="board-detail-btn-group board-detail-btn-group-right">
+                        <Link to="/" className="board-btn cancel">목록으로</Link>
+                    </div>
+                )}
             </main>
             <ConfirmModal
                 open={showConfirm}

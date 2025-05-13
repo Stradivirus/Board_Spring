@@ -1,3 +1,5 @@
+// board_rv/src/components/AuthForm.tsx
+
 import React, { useState } from "react";
 import type { Member } from "../types/Member";
 import { useAuth } from "../context/AuthContext";
@@ -114,9 +116,10 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode, onSuccess }) => {
                 await delay(1000); // 1초 대기
 
                 if (mode === "login") {
+                    // id, userId, nickname 모두 저장
                     login(
                         data.token || "dummy-token",
-                        { userId: data.userId, nickname: data.nickname }
+                        { id: data.id, userId: data.userId, nickname: data.nickname }
                     );
                 }
                 if (onSuccess) onSuccess(data);

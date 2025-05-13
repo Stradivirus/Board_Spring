@@ -24,19 +24,19 @@ public class PostController {
     @GetMapping("/{id}")
     public ResponseEntity<PostResponse> getPostDetail(@PathVariable Long id) {
         Board board = postService.getPostByIdAndIncrementViewCount(id, LocalDate.now());
-        return ResponseEntity.ok(PostService.toResponse(board));
+        return ResponseEntity.ok(postService.toResponse(board));
     }
 
     @GetMapping("/{id}/edit")
     public ResponseEntity<PostResponse> getPostForEdit(@PathVariable Long id) {
         Board board = postService.getPostById(id);
-        return ResponseEntity.ok(PostService.toResponse(board));
+        return ResponseEntity.ok(postService.toResponse(board));
     }
 
     @PostMapping
     public ResponseEntity<PostResponse> createPost(@RequestBody PostCreateRequest request) {
         Board board = postService.createPostFromDto(request);
-        return ResponseEntity.ok(PostService.toResponse(board));
+        return ResponseEntity.ok(postService.toResponse(board));
     }
 
     @GetMapping
@@ -46,7 +46,7 @@ public class PostController {
     ) {
         Page<Board> boards = postService.getAllPosts(PageRequest.of(page, size));
         Page<PostResponse> response = new PageImpl<>(
-                boards.getContent().stream().map(PostService::toResponse).collect(Collectors.toList()),
+                boards.getContent().stream().map(postService::toResponse).collect(Collectors.toList()),
                 boards.getPageable(),
                 boards.getTotalElements()
         );
@@ -59,7 +59,7 @@ public class PostController {
             @RequestBody PostCreateRequest request
     ) {
         Board board = postService.updatePostFromDto(id, request);
-        return ResponseEntity.ok(PostService.toResponse(board));
+        return ResponseEntity.ok(postService.toResponse(board));
     }
 
     @DeleteMapping("/{id}")
@@ -68,7 +68,6 @@ public class PostController {
         return ResponseEntity.noContent().build();
     }
 
-    // 중복 등록 등 예외 발생 시 400 에러와 메시지 반환
     @ExceptionHandler(IllegalStateException.class)
     public ResponseEntity<?> handleIllegalState(IllegalStateException ex) {
         return ResponseEntity.badRequest().body(java.util.Map.of("message", ex.getMessage()));

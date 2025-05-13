@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import type { Post } from "../types/Post";
 import { API_URLS } from "../api/urls";
 import { formatDate } from "../utils/formatDate";
+import { useAuth } from "../context/AuthContext";
 import "../styles/Board.css";
 
 const PAGE_SIZE = 30;
@@ -13,6 +14,7 @@ const PostList: React.FC = () => {
     const [page, setPage] = useState(0);
     const [error, setError] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
+    const { user } = useAuth();
 
     useEffect(() => {
         setIsLoading(true);
@@ -42,9 +44,15 @@ const PostList: React.FC = () => {
             <main className="board-main">
                 <div className="board-title-bar">
                     <h2>게시글 목록</h2>
-                    <Link to="/new">
-                        <button className="board-write-btn">글쓰기</button>
-                    </Link>
+                    {user ? (
+                        <Link to="/new">
+                            <button className="board-write-btn">글쓰기</button>
+                        </Link>
+                    ) : (
+                        <button className="board-write-btn" disabled style={{ opacity: 0.5, cursor: "not-allowed" }}>
+                            글쓰기 (로그인 필요)
+                        </button>
+                    )}
                 </div>
                 {error && <div className="error-message" style={{ marginBottom: 16 }}>{error}</div>}
                 <table className="board-table">
@@ -84,7 +92,7 @@ const PostList: React.FC = () => {
                                         {post.title}
                                     </Link>
                                 </td>
-                                <td className="board-post-author">{post.writer}</td>
+                                <td className="board-post-author">{post.writerNickname || "-"}</td>
                                 <td className="board-post-date">{date}</td>
                                 <td className="board-post-date">{time}</td>
                                 <td className="board-post-views">{post.viewCount}</td>

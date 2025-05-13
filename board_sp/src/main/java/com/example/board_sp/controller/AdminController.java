@@ -34,7 +34,7 @@ public class AdminController {
         Page<Board> boards = postService.getSoftDeletedPosts(PageRequest.of(page, size));
         Page<PostResponse> response = new PageImpl<>(
                 boards.getContent().stream()
-                        .map(b -> PostService.toResponse(b, true))
+                        .map(b -> postService.toResponse(b, true))
                         .collect(Collectors.toList()),
                 boards.getPageable(),
                 boards.getTotalElements()
@@ -51,7 +51,7 @@ public class AdminController {
         Page<BoardArchive> archives = postService.getHardDeletedPosts(PageRequest.of(page, size));
         Page<PostResponse> response = new PageImpl<>(
                 archives.getContent().stream()
-                        .map(PostService::toResponse)
+                        .map(postService::toResponse)
                         .collect(Collectors.toList()),
                 archives.getPageable(),
                 archives.getTotalElements()

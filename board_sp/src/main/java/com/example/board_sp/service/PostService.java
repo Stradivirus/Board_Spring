@@ -5,9 +5,11 @@ import com.example.board_sp.dto.PostResponse;
 import com.example.board_sp.entity.Board;
 import com.example.board_sp.entity.BoardStatus;
 import com.example.board_sp.entity.BoardArchive;
+import com.example.board_sp.entity.Member;
 import com.example.board_sp.repository.PostRepository;
 import com.example.board_sp.repository.PostArchiveRepository;
 import com.example.board_sp.repository.BoardStatusRepository;
+import com.example.board_sp.repository.MemberRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -29,6 +31,7 @@ public class PostService {
     private final PostRepository postRepository;
     private final BoardStatusRepository boardStatusRepository;
     private final PostArchiveRepository postArchiveRepository;
+    private final MemberRepository memberRepository;
 
     @Transactional
     public Board getPostByIdAndIncrementViewCount(Long id, LocalDate createdDate) {
@@ -46,10 +49,12 @@ public class PostService {
 
     @Transactional
     public Board createPostFromDto(PostCreateRequest request) {
-        // 중복 체크: 같은 제목, 작성자, 내용, 오늘 날짜로 이미 등록된 글이 있는지 확인
-        boolean exists = postRepository.existsByTitleAndWriterAndContentAndCreatedDate(
+        Member member = memberRepository.findByUserId(request.getUserId())
+                .orElseThrow(() -> new IllegalStateException("존재하지 않는 사용자입니다."));
+
+        boolean exists = postRepository.existsByTitleAndWriterIdAndContentAndCreatedDate(
                 request.getTitle(),
-                request.getWriter(),
+                member.getId(),
                 request.getContent(),
                 LocalDate.now()
         );
@@ -60,7 +65,7 @@ public class PostService {
         Board board = new Board();
         board.setTitle(request.getTitle());
         board.setContent(request.getContent());
-        board.setWriter(request.getWriter());
+        board.setWriterId(member.getId());
         board.setViewCount(0);
         board.setCreatedDate(LocalDate.now());
         board.setCreatedTime(LocalTime.now());
@@ -84,9 +89,13 @@ public class PostService {
     @Transactional
     public Board updatePostFromDto(Long id, PostCreateRequest request) {
         Board board = getPostById(id);
+
+        Member member = memberRepository.findByUserId(request.getUserId())
+                .orElseThrow(() -> new IllegalStateException("존재하지 않는 사용자입니다."));
+
         board.setTitle(request.getTitle());
         board.setContent(request.getContent());
-        board.setWriter(request.getWriter());
+        board.setWriterId(member.getId());
         Board updatedBoard = postRepository.save(board);
 
         int latestRevision = boardStatusRepository.findMaxRevision(board.getId(), board.getCreatedDate());
@@ -117,19 +126,16 @@ public class PostService {
         boardStatusRepository.save(status);
     }
 
-    // 소프트 삭제(아직 아카이브 안 된 글) 조회
     @Transactional(readOnly = true)
     public Page<Board> getSoftDeletedPosts(Pageable pageable) {
         return postRepository.findSoftDeleted(pageable);
     }
 
-    // 하드 삭제(아카이브) 조회
     @Transactional(readOnly = true)
     public Page<BoardArchive> getHardDeletedPosts(Pageable pageable) {
         return postArchiveRepository.findAllDeleted(pageable);
     }
 
-    // 소프트+하드 삭제 전체 조회 (페이징은 메모리에서 처리)
     @Transactional(readOnly = true)
     public Page<PostResponse> getAllDeletedPosts(Pageable pageable) {
         Page<Board> softDeleted = getSoftDeletedPosts(pageable);
@@ -145,17 +151,23 @@ public class PostService {
     }
 
     // Entity -> DTO 변환 (Board)
-    public static PostResponse toResponse(Board board) {
+    public PostResponse toResponse(Board board) {
         return toResponse(board, false);
     }
 
-    public static PostResponse toResponse(Board board, boolean deleted) {
+    public PostResponse toResponse(Board board, boolean deleted) {
         if (board == null) return null;
         PostResponse dto = new PostResponse();
         dto.setId(board.getId());
         dto.setTitle(board.getTitle());
         dto.setContent(board.getContent());
-        dto.setWriter(board.getWriter());
+        dto.setWriterId(board.getWriterId());
+        // 닉네임 세팅
+        Member member = null;
+        if (board.getWriterId() != null) {
+            member = memberRepository.findById(board.getWriterId()).orElse(null);
+        }
+        dto.setWriterNickname(member != null ? member.getNickname() : "");
         dto.setViewCount(board.getViewCount());
         dto.setCreatedDate(board.getCreatedDate());
         dto.setCreatedTime(board.getCreatedTime());
@@ -165,13 +177,19 @@ public class PostService {
     }
 
     // Entity -> DTO 변환 (BoardArchive)
-    public static PostResponse toResponse(BoardArchive post) {
+    public PostResponse toResponse(BoardArchive post) {
         if (post == null) return null;
         PostResponse dto = new PostResponse();
         dto.setId(post.getId());
         dto.setTitle(post.getTitle());
         dto.setContent(post.getContent());
-        dto.setWriter(post.getWriter());
+        dto.setWriterId(post.getWriterId());
+        // 닉네임 세팅
+        Member member = null;
+        if (post.getWriterId() != null) {
+            member = memberRepository.findById(post.getWriterId()).orElse(null);
+        }
+        dto.setWriterNickname(member != null ? member.getNickname() : "");
         dto.setViewCount(post.getViewCount());
         dto.setCreatedDate(post.getCreatedDate());
         dto.setCreatedTime(post.getCreatedTime());

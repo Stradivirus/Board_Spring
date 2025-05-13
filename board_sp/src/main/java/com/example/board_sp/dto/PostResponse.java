@@ -1,3 +1,4 @@
+// board_sp/src/main/java/com/example/board_sp/dto/PostResponse.java
 package com.example.board_sp.dto;
 
 import lombok.Getter;
@@ -8,11 +9,11 @@ import java.time.LocalTime;
 @Getter
 @Setter
 public class PostResponse {
-    // board 테이블
     private Long id;
     private String title;
     private String content;
-    private String writer;
+    private Long writerId;
+    private String writerNickname; // ★ 추가
     private Integer viewCount;
     private LocalDate createdDate;
     private LocalTime createdTime;
