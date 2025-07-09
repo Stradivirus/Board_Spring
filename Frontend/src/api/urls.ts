@@ -1,4 +1,4 @@
-const API_BASE = "http://localhost:8081/api";
+const API_BASE = "http://localhost:8080/api";
 
 export const API_URLS = {
     POSTS: `${API_BASE}/posts`,
